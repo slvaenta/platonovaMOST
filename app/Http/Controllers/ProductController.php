@@ -3,28 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($category_id)
     {
-        $categories = Category::all();
-        if($categories->count()>0){
+        $products = Category::with('products')::withTrashed()->find($category_id)->products;
+        if($products->count()>0){
             $data = [
                 'status' => 200,
-                'categories' => $categories
+                'products' => $products
             ];
             return response()->json($data, 200);
         }
         else{
             $data = [
                 'status' => 404,
-                'categories' => 'No Records Found'
+                'products' => 'No Products Found'
             ];
             return response()->json($data, 404);
         }
@@ -36,17 +37,17 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = Category::find($id);
-        if($category){
+        $product = Product::find($id);
+        if($product){
             return response()->json([
                 'status' => 200,
-                'category' => $category
+                'product' => $product
             ], 200);
         }
         else{
             return response()->json([
                 'status' => 404,
-                'message' => "No Such Category Found!"
+                'message' => "No Such Product Found!"
             ], 404);
         }
     }
@@ -57,7 +58,10 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(),[
-            'name' => 'required|string|unique:categories,name|max:191'
+            'name' => 'required|string|unique:products,name|max:191',
+            'description' => 'required|text',
+            'price' => 'required|integer',
+            'category_id' => 'required|exists:categories,id'
         ]);       
         if($validator->fails()){
             return response()->json([
@@ -66,20 +70,20 @@ class CategoryController extends Controller
             ], 422);
         }
         else{
-            $category = Category::find($id);
-            if($category){
-                $category->update([
+            $product = Product::find($id);
+            if($product){
+                $product->update([
                     'name' => $request->name
                 ]);
                 return response()->json([
                     'status' => 200,
-                    'message' => "Category Updated Succesfully"
+                    'message' => "Product Updated Succesfully"
                 ], 200);
             }
             else{
                 return response()->json([
                     'status' => 404,
-                    'message' => "No Such Category Found!"
+                    'message' => "No Such Product Found!"
                 ], 404);
             }
         }
@@ -90,18 +94,18 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = Category::find($id);
-        if($category){
-            $category->delete();
+        $product = Product::find($id);
+        if($product){
+            $product->delete();
             return response()->json([
                 'status' => 200,
-                'message' => "Category Was Deleted Succesfully"
+                'message' => "Product Was Deleted Succesfully"
             ], 200);
         }
         else{
             return response()->json([
                 'status' => 404,
-                'message' => "No Such Category Found!"
+                'message' => "No Such Student Found!"
             ], 404);
         }
     }
@@ -109,7 +113,10 @@ class CategoryController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'name' => 'required|string|unique:categories,name|max:191'
+            'name' => 'required|string|unique:products,name|max:191',
+            'description' => 'required|text',
+            'price' => 'required|integer',
+            'category_id' => 'required|exists:categories,id'
         ]);
         if($validator->fails()){
             return response()->json([
@@ -118,13 +125,16 @@ class CategoryController extends Controller
             ], 422);
         }
         else{
-            $category = Category::create([
-                'name' => $request->name
+            $product = Product::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'price' => $request->price,
+                'category_id' => $request->category_id
             ]);
-            if($category){
+            if($product){
                 return response()->json([
                     'status' => 201,
-                    'message' => "Category Created Succesfully"
+                    'message' => "Product Created Succesfully"
                 ], 201);
             }
             else{
@@ -138,19 +148,21 @@ class CategoryController extends Controller
 
     public function restore(string $id)
     {
-        $category = Category::withTrashed()->find($id);
-        if($category){
-            $category->restore();
+        $product = Product::withTrashed()->find($id);
+        if($product){
+            $product->restore();
             return response()->json([
                 'status' => 200,
-                'message' => "Category Was Restored Succesfully"
+                'message' => "Product Was Restored Succesfully"
             ], 200);
         }
         else{
             return response()->json([
                 'status' => 404,
-                'message' => "No Such Category Found!"
+                'message' => "No Such Product Found!"
             ], 404);
         }
     }
+
+
 }
