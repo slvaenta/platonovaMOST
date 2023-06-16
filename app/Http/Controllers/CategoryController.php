@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withTrashed()->get(['id', 'name', 'deleted_at']);
         if($categories->count()>0){
             $data = [
                 'status' => 200,

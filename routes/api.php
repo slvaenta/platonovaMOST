@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -19,5 +20,5 @@ Route::post('products', [ProductController::class, 'create']);
 Route::post('products/{id}/restore', [ProductController::class, 'restore']);
 Route::patch('products/{id}/update', [ProductController::class, 'update']);
 Route::delete('products/{id}/delete', [ProductController::class, 'destroy']);
-Route::get('products/{category_id}', [ProductController::class, 'index']);
-Route::get('products/{id}', [ProductController::class, 'show']);
+Route::get('products/{category_id}/index', [ProductController::class, 'index']);
+Route::get('products/{id}/show', [ProductController::class, 'show']);

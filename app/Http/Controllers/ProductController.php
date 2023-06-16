@@ -12,9 +12,14 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($category_id)
+    public function index(Request $request, $category_id)
     {
-        $products = Category::with('products')::withTrashed()->find($category_id)->products;
+        //dd($request->get('deleted'));
+        $products = Category::find($category_id)->products;
+        if($request->has('deleted')&&$request->boolean('deleted')==true){
+            $products = Category::find($category_id)->products()->withTrashed()->get();
+        }
+        //$products = Category::with('products')->find($category_id)->products;
         if($products->count()>0){
             $data = [
                 'status' => 200,
@@ -58,8 +63,8 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(),[
-            'name' => 'required|string|unique:products,name|max:191',
-            'description' => 'required|text',
+            'name' => 'required|string|exists:products,name|max:191',
+            'description' => 'required|string',
             'price' => 'required|integer',
             'category_id' => 'required|exists:categories,id'
         ]);       
@@ -73,7 +78,10 @@ class ProductController extends Controller
             $product = Product::find($id);
             if($product){
                 $product->update([
-                    'name' => $request->name
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'price' => $request->price,
+                    'category_id' => $request->category_id
                 ]);
                 return response()->json([
                     'status' => 200,
@@ -114,7 +122,7 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|unique:products,name|max:191',
-            'description' => 'required|text',
+            'description' => 'required|string',
             'price' => 'required|integer',
             'category_id' => 'required|exists:categories,id'
         ]);
