@@ -36,3 +36,4 @@ Route::group([
 Route::get('users', [AuthController::class, 'index']);
 Route::delete('users/{id}/delete', [AuthController::class, 'destroy']);
 Route::post('users/{id}/restore', [AuthController::class, 'restore']);
+Route::patch('users/{id}/update', [AuthController::class, 'update']);

@@ -134,4 +134,38 @@ class AuthController extends Controller
             ], 404);
         }
     }
+    public function update(Request $request, string $id)
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|exists:users,email',
+            'password' => 'required|string|min:6'
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages()
+            ], 422);
+        }
+        else{
+            $product = User::find($id);
+            if($product){
+                $product->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => $request->password
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "User Updated Succesfully"
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => "No Such User Found!"
+                ], 404);
+            }
+        }
+    }
 }

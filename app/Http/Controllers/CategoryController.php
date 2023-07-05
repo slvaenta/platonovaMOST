@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function index()
     {
         $categories = Category::withTrashed()->get(['id', 'name', 'deleted_at']);
