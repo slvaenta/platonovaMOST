@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Services\DummyJsonService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Facades\DummyJson;
@@ -17,8 +16,13 @@ class CategoryController extends Controller
 
     public function getCategories()
     {
-        $categories = DummyJsonService::getCategories();
-        
+        $categories = DummyJson::getCategories();
+        foreach ($categories as $category) {
+            Category::create([
+                'name' => $category,
+            ]);
+        }
+        return response()->json();
     }
     public function index()
     {

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\DummyJsonService;
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
 class DummyJsonServiceProvider extends ServiceProvider
@@ -20,8 +21,9 @@ class DummyJsonServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->bind(DummyJsonService::class, function($app){
-            return new DummyJsonService();
+        $this->app->singleton('dummyJson', function($app){
+            $client = new Client();
+            return new DummyJsonService($client);
         });
     }
 }
