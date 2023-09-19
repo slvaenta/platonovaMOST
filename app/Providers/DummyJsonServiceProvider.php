@@ -12,9 +12,7 @@ class DummyJsonServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(DummyJsonService::class, function($app){
-            return new DummyJsonService();
-        });
+        
     }
 
     /**
@@ -22,6 +20,8 @@ class DummyJsonServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->bind(DummyJsonService::class, function($app){
+            return new DummyJsonService();
+        });
     }
 }

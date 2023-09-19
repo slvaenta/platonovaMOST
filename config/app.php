@@ -187,7 +187,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-        // 'Example' => App\Facades\Example::class,
+        'DummyJson' => App\Facades\DummyJson::class,
     ])->toArray(),
 
 ];

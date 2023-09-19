@@ -3,14 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\DummyJsonService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Facades\DummyJson;
 
 class CategoryController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
+    }
+
+    public function getCategories()
+    {
+        $categories = DummyJsonService::getCategories();
+        
     }
     public function index()
     {

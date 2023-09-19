@@ -16,6 +16,7 @@ Route::patch('categories/{id}/update', [CategoryController::class, 'update']);
 Route::delete('categories/{id}/delete', [CategoryController::class, 'destroy']);
 Route::get('categories', [CategoryController::class, 'index']);
 Route::get('categories/{id}', [CategoryController::class, 'show']);
+Route::post('getCategories', [CategoryController::class, 'getCategories']);
 
 Route::post('products', [ProductController::class, 'create']);
 Route::post('products/{id}/restore', [ProductController::class, 'restore']);
